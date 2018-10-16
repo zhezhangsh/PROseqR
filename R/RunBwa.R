@@ -8,6 +8,7 @@ RunBwaMemSingle <- function(fq, ref, bwa, samtools, output='', min.length=30, se
   if (output[1]!='' & !identical(output[1], NA)) f1 <- paste(output[1], f1, sep='/');
   f2 <- sub('.sam$', '.bam', f1);
   f3 <- sub('.bam$', '.sorted.bam', f2);
+  f4 <- sub('.sorted.bam$', '.sorted.primary.bam', f3);
 
   cmd1 <- paste(bwa, 'mem', '-k', seed.length, '-T', min.length, '-t', threads);
   if (all) cmd1 <- paste(cmd1, '-a');
@@ -20,8 +21,9 @@ RunBwaMemSingle <- function(fq, ref, bwa, samtools, output='', min.length=30, se
   }
   cmd3 <- paste(samtools, 'sort', f2, '-o', f3);
   cmd4 <- paste(samtools, 'index', f3);
+  cmd5 <- paste(samtools, 'view -h -q 1 -F 4 -F 256', f3, '|', samtools, 'view -Sb |', samtools, 'sort >', f4);
 
-  c(cmd1, cmd2, cmd3, cmd4);
+  c(cmd1, cmd2, cmd3, cmd4, cmd5);
 }
 
 #######################################################
