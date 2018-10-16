@@ -38,7 +38,7 @@ RunBwaMemPair <- function(fq1, fq2, ref, bwa, samtools, output, min.length=30, s
     cmd1 <- paste(cmd1, ref, fq1, fq2, '>', f1);
     cmd2 <- paste(samtools, 'view -Sb', f1, '>', f2);
   } else {
-    cmd1 <- paste(cmd1, ref, fq, '|', samtools, 'view -Sb >', f2);
+    cmd1 <- paste(cmd1, ref, fq1, fq2, '|', samtools, 'view -Sb >', f2);
     cmd2 <- '';
   }
   cmd3 <- paste(samtools, 'sort', f2, '-o', f3);
