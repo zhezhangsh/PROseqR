@@ -33,6 +33,7 @@ RunBwaMemPair <- function(fq1, fq2, ref, bwa, samtools, output, min.length=30, s
   f1 <- paste(output, '.sam', sep='');
   f2 <- sub('.sam$', '.bam', f1);
   f3 <- sub('.bam$', '.sorted.bam', f2);
+  f4 <- sub('.sorted.bam$', '.sorted.primary.bam', f3);
 
   cmd1 <- paste(bwa, 'mem', '-k', seed.length, '-T', min.length, '-t', threads);
   if (all) cmd1 <- paste(cmd1, '-a');
