@@ -23,7 +23,7 @@ RunBwaMemSingle <- function(fq, ref, bwa, samtools, outpath='', prefix='', min.l
   }
   cmd3 <- paste(samtools, 'sort', f2, '-o', f3);
   cmd4 <- paste(samtools, 'index', f3);
-  cmd5 <- paste(samtools, 'view -h -q 1 -F 4', f3, '|', samtools, 'view -Sb |', samtools, 'sort >', f4);
+  cmd5 <- paste(samtools, 'view -h -q 1 -F 4 -F 256 -F 2048', f3, '|', samtools, 'view -Sb |', samtools, 'sort >', f4);
   cmd6 <- paste(samtools, 'index', f4);
 
   c(cmd1, cmd2, cmd3, cmd4, cmd5, cmd6);
