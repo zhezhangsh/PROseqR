@@ -1,11 +1,13 @@
-RunBwaMemSingle <- function(fq, ref, bwa, samtools, output='', min.length=30, seed.length=19, threads=1, all=FALSE, sam=TRUE) {
+RunBwaMemSingle <- function(fq, ref, bwa, samtools, outpath='', prefix='', min.length=30, seed.length=19, threads=1, all=FALSE, sam=TRUE) {
+  if (prefix[1]=='' | identical(prefix[1], NA)) {
+    f1 <- paste(f1, '.sam', sep='');
+    f1 <- sapply(strsplit(fq, '/'), function(x) rev(x)[1]);
+    f1 <- sub('.gz$', '', f1);
+    f1 <- sub('.fastq$', '', f1);
+    f1 <- sub('.fq$', '', f1);
+  } else f1 <- paste(prefix, '.sam', sep='');
+  if (outpath[1]!='' & !identical(outpath[1], NA)) f1 <- paste(outpath[1], f1, sep='/');
 
-  f1 <- sapply(strsplit(fq, '/'), function(x) rev(x)[1]);
-  f1 <- sub('.gz$', '', f1);
-  f1 <- sub('.fastq$', '', f1);
-  f1 <- sub('.fq$', '', f1);
-  f1 <- paste(f1, '.sam', sep='');
-  if (output[1]!='' & !identical(output[1], NA)) f1 <- paste(output[1], f1, sep='/');
   f2 <- sub('.sam$', '.bam', f1);
   f3 <- sub('.bam$', '.sorted.bam', f2);
   f4 <- sub('.sorted.bam$', '.sorted.primary.bam', f3);
@@ -28,9 +30,9 @@ RunBwaMemSingle <- function(fq, ref, bwa, samtools, output='', min.length=30, se
 }
 
 #######################################################
-RunBwaMemPair <- function(fq1, fq2, ref, bwa, samtools, output, min.length=30, seed.length=19, threads=1, all=FALSE, sam=TRUE) {
+RunBwaMemPair <- function(fq1, fq2, ref, bwa, samtools, outpath, prefix, min.length=30, seed.length=19, threads=1, all=FALSE, sam=TRUE) {
 
-  f1 <- paste(output, '.sam', sep='');
+  f1 <- paste(outpath, '/', prefix, '.sam', sep='');
   f2 <- sub('.sam$', '.bam', f1);
   f3 <- sub('.bam$', '.sorted.bam', f2);
   f4 <- sub('.sorted.bam$', '.sorted.primary.bam', f3);
