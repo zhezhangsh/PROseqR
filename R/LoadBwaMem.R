@@ -4,7 +4,7 @@ LoadPairedEnd <- function(fp, region=GRanges(), primary.only=FALSE, min.mapq=1, 
   
   wht <- sam.fields[sam.fields %in% scanBamWhat()];
   flg <- scanBamFlag(isSecondaryAlignment=!primary.only);
-  param <- ScanBamParam(flag=flg, simpleCigar = simple.cigar, mapqFilter=max(0, min.mapq), 
+  param <- ScanBamParam(flag=flg, simpleCigar = simple.cigar, mapqFilter=max(0, min.mapq), reverseComplement=TRUE,
                         what=wht, which=region);
   
   ga  <- readGAlignmentPairs(fp, param = param);
@@ -63,7 +63,7 @@ LoadPairedEndWrapper <- function(fin, fout, prefix, region, primary.only=TRUE, m
     fn1 <- paste(fout, '/', prefix, '_', names(region)[i], '.rds', sep='');
     fn2 <- paste(fout, '/', prefix, '_', names(region)[i], '_summary.rds', sep='');
     
-    saveRDS(gr, fn1);
+    saveRDS(gr0, fn1);
     saveRDS(out, fn2);
     
     out;
@@ -79,7 +79,7 @@ LoadSingleEnd <- function(fs, region=GRanges(), primary.only=FALSE, min.mapq=1, 
   
   wht <- sam.fields[sam.fields %in% scanBamWhat()];
   flg <- scanBamFlag(isSecondaryAlignment=!primary.only);
-  param <- ScanBamParam(flag=flg, simpleCigar = simple.cigar, mapqFilter=max(0, min.mapq), 
+  param <- ScanBamParam(flag=flg, simpleCigar = simple.cigar, mapqFilter=max(0, min.mapq), reverseComplement=TRUE,
                         what=wht, which=region);
   
   ga <- readGAlignments(fs, param = param);
