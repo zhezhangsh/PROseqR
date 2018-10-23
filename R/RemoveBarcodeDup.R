@@ -14,7 +14,9 @@ RemoveBarcodeDup <- function(fin, fout, barcode) {
   rep <- loc[duplicated(loc)];
 
   du0 <- dup[loc %in% rep];
-  du0 <- du0[rev(order(du0$mapq))];
+  ele <- elementMetadata(du0);
+  mpq <- rowSums(as.matrix(ele[, grep('mapq', colnames(ele)), drop=FALSE]));
+  du0 <- du0[rev(order(mpq))];
   qn0 <- du0$qname;
   bc0 <- barcode[names(barcode) %in% qn0];
   bc0 <- as.vector(bc0[qn0]);
