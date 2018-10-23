@@ -15,7 +15,9 @@ RemoveBarcodeDup <- function(fin, fout, barcode) {
 
   du0 <- dup[loc %in% rep];
   du0 <- du0[rev(order(du0$mapq))];
-  bc0 <- as.vector(barcode[du0$qname]);
+  qn0 <- du0$qname;
+  bc0 <- barcode[names(barcode) %in% qn0];
+  bc0 <- as.vector(bc0[qn0]);
   lc0 <- paste(as.vector(seqnames(du0)), start(du0), end(du0), bc0, sep='_');
   ind <- which(duplicated(lc0));
   qn0 <- du0[ind]$qname;
