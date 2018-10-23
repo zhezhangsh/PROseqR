@@ -4,10 +4,11 @@ export("LoadPairedEnd");
 export("LoadPairedEndWrapper");
 export("LoadSingleEnd");
 export("LoadSingleEndWrapper");
-export("ParseFlash2")
-export("RunBwaMemPair")
-export("RunBwaMemSingle")
-export("RunFlash2")
-export("SampleFastq")
-export("TrimBarcode")
+export("ParseFlash2");
+export("RemoveBarcodeDup");
+export("RunBwaMemPair");
+export("RunBwaMemSingle");
+export("RunFlash2");
+export("SampleFastq");
+export("TrimBarcode");
 

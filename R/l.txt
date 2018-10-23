@@ -1,6 +1,0 @@
-expor("ParseFlash2")
-expor("RunBwaMemPair")
-expor("RunBwaMemSingle")
-expor("RunFlash2")
-expor("SampleFastq")
-expor("TrimBarcode")
