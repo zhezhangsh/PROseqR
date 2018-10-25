@@ -66,8 +66,8 @@ LoadPairedEndWrapper <- function(fin, fout, prefix, region, min.mapq=20, simple.
     names(gr0) <- 1:length(gr0);
 
     mpq <- elementMetadata(gr0)[, c('mapq1', 'mapq2')];
-    ttl <- c(number=length(gr0), mean_mapq=mean(rowSums(mpq)), mean_length=mean(width(gr0)));
-    out <- list(overall=ttl, mapq=table(rowSums(mpq)), width=table(width(gr0)));
+    ttl <- c(number=length(gr0), mean_mapq=mean(mpq[,1]+mpq[,2]), mean_length=mean(width(gr0)));
+    out <- list(overall=ttl, mapq=table(mpq[,1]+mpq[,2]), width=table(width(gr0)));
 
     fn1 <- paste(fout, '/', prefix, '_', names(region)[i], '.rds', sep='');
     fn2 <- paste(fout, '/', prefix, '_', names(region)[i], '_summary.rds', sep='');
