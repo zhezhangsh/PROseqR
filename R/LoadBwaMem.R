@@ -42,6 +42,7 @@ LoadPairedEndWrapper <- function(fin, fout, prefix, region, primary.only=TRUE, m
 
     loc <- region[i];
     gr  <- LoadPairedEnd(fin, region=loc, primary.only=primary.only, min.mapq=min.mapq, simple.cigar=TRUE, sam.fields=sam.fields);
+    dmp <- getDumpedAlignments();
 
     fst <- gr$first;
     lst <- gr$last;
@@ -62,9 +63,11 @@ LoadPairedEndWrapper <- function(fin, fout, prefix, region, primary.only=TRUE, m
 
     fn1 <- paste(fout, '/', prefix, '_', names(region)[i], '.rds', sep='');
     fn2 <- paste(fout, '/', prefix, '_', names(region)[i], '_summary.rds', sep='');
+    fn3 <- paste(fout, '/', prefix, '_', names(region)[i], '_dumped.rds', sep='');
 
     saveRDS(gr0, fn1);
     saveRDS(out, fn2);
+    saveRDS(dmp, fn3);
 
     out;
   });
