@@ -27,8 +27,7 @@ LoadPairedEnd <- function(fp, region=GRanges(), primary.only=FALSE, min.mapq=1, 
 };
 
 # Load reads mapped to individual chromosomes with preset parameters
-LoadPairedEndWrapper <- function(fin, fout, prefix, region, primary.only=TRUE, min.mapq=20, simple.cigar=TRUE,
-                                 sam.fields=c('mapq', 'qname'), max.width=2500, verbose=FALSE) {
+LoadPairedEndWrapper <- function(fin, fout, prefix, region, min.mapq=20, simple.cigar=TRUE, max.width=2500, verbose=FALSE) {
 
   # fin     Input file of sorted bam file
   # fout    Directory of output file
@@ -36,30 +35,35 @@ LoadPairedEndWrapper <- function(fin, fout, prefix, region, primary.only=TRUE, m
 
   if (!dir.exists(fout)) dir.create(fout, showWarnings = FALSE);
   if (identical(names(region), NULL)) names(region) <- 1:length(region);
+  sam.fields <- c('flag', 'mapq', 'qname');
+  primary.only=TRUE;
 
   stat <- lapply(1:length(region), function(i) {
     if (verbose) cat('Loading', names(region)[i], '\n');
 
     loc <- region[i];
-    gr  <- LoadPairedEnd(fin, region=loc, primary.only=primary.only, min.mapq=min.mapq, simple.cigar=TRUE, sam.fields=sam.fields);
-    dmp <- getDumpedAlignments();
 
-    fst <- gr$first;
-    lst <- gr$last;
+    flg1   <- scanBamFlag(isSecondaryAlignment=!primary.only, isFirstMateRead=TRUE);
+    param1 <- ScanBamParam(flag=flg1, simpleCigar = simple.cigar, mapqFilter=max(0, min.mapq), what=sam.fields, which=loc);
 
-    # stt1 <- start(fst);
-    # stt2 <- start(lst);
-    # end1 <- end(fst);
-    # end2 <- end(lst);
-    # strd <- as.vector(strand(fst));
-    #
-    stt <- pmin(start(fst), start(lst));
-    end <- pmax(end(fst), end(lst));
-    gr0 <- GRanges(seqnames(fst), IRanges(stt, end), strand=strand(lst), mapq1=fst$mapq, mapq2=lst$mapq, qname=fst$qname);
+    flg2   <- scanBamFlag(isSecondaryAlignment=!primary.only, isSecondMateRead=TRUE);
+    param2 <- ScanBamParam(flag=flg2, simpleCigar = simple.cigar, mapqFilter=max(0, min.mapq), what=sam.fields, which=loc);
+
+    gr1 <- readGAlignments(fin, param = param1);
+    gr2 <- readGAlignments(fin, param = param2);
+
+    gr1 <- gr1[elementMetadata(gr1)$qname %in% elementMetadata(gr2)$qname];
+    gr2 <- gr2[elementMetadata(gr2)$qname %in% elementMetadata(gr1)$qname];
+    gr1 <- gr1[order(elementMetadata(gr1)$qname)];
+    gr2 <- gr2[order(elementMetadata(gr2)$qname)];
+
+    stt <- pmin(start(gr1), start(gr2));
+    end <- pmax(end(gr1), end(gr2));
+    gr0 <- GRanges(as.vector(seqnames(gr1)), IRanges(stt, end), strand=as.vector(strand(gr2)),
+                   mapq1=elementMetadata(gr1)$mapq, mapq2=elementMetadata(gr2)$mapq, qname=elementMetadata(gr1)$qname);
+    gr0 <- gr0[as.vector(seqnames(gr1))==as.vector(seqnames(gr2))];
     gr0 <- gr0[width(gr0)<=max.width];
-
-    ttl <- c(number=length(gr0), mean_mapq1=mean(gr0$mapq1), mean_mapq1=mean(gr0$mapq2), mean_length=mean(width(gr0)));
-    out <- list(overall=ttl, mapq=table(gr0$mapq1+gr0$mapq2), width=table(width(gr0)));
+    names(gr0) <- 1:length(gr0);
 
     fn1 <- paste(fout, '/', prefix, '_', names(region)[i], '.rds', sep='');
     fn2 <- paste(fout, '/', prefix, '_', names(region)[i], '_summary.rds', sep='');
