@@ -71,11 +71,9 @@ LoadPairedEndWrapper <- function(fin, fout, prefix, region, min.mapq=20, simple.
 
     fn1 <- paste(fout, '/', prefix, '_', names(region)[i], '.rds', sep='');
     fn2 <- paste(fout, '/', prefix, '_', names(region)[i], '_summary.rds', sep='');
-    fn3 <- paste(fout, '/', prefix, '_', names(region)[i], '_dumped.rds', sep='');
 
     saveRDS(gr0, fn1);
     saveRDS(out, fn2);
-    saveRDS(dmp, fn3);
 
     out;
   });
