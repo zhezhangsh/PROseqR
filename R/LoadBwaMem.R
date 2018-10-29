@@ -115,8 +115,10 @@ LoadSingleEndWrapper <- function(fin, fout, prefix, region, primary.only=TRUE, m
 
     loc <- region[i];
     gr  <- LoadSingleEnd(fin, region=loc, primary.only=primary.only, min.mapq=min.mapq, simple.cigar=TRUE, sam.fields=sam.fields);
-    str <- c('-', '+')[as.integer(strand(gr))];
-    strand(gr) <- str;
+    str0 <- as.vector(strand(gr));
+    str1 <- rep('+', length(str0));
+    str1[str0=='+'] <- '-';
+    strand(gr) <- str1;
 
     ttl <- c(number=length(gr), mean_mapq=mean(gr$mapq), mean_length=mean(width(gr)));
     out <- list(overall=ttl, mapq=table(gr$mapq), width=table(width(gr)));
