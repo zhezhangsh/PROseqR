@@ -63,7 +63,7 @@ LoadPairedEndWrapper <- function(fin, fout, prefix, region, min.mapq=20, simple.
                    mapq1=elementMetadata(gr1)$mapq, mapq2=elementMetadata(gr2)$mapq, qname=elementMetadata(gr1)$qname);
     gr0 <- gr0[as.vector(seqnames(gr1))==as.vector(seqnames(gr2))];
     gr0 <- gr0[width(gr0)<=max.width];
-    names(gr0) <- 1:length(gr0);
+    if (length(gr0)>0) names(gr0) <- 1:length(gr0);
 
     mpq <- elementMetadata(gr0)[, c('mapq1', 'mapq2')];
     ttl <- c(number=length(gr0), mean_mapq=mean(mpq[,1]+mpq[,2]), mean_length=mean(width(gr0)));
