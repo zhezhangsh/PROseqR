@@ -4,6 +4,7 @@ export("LoadPairedEnd");
 export("LoadPairedEndWrapper");
 export("LoadSingleEnd");
 export("LoadSingleEndWrapper");
+export("ParseDREG");
 export("ParseFlash2");
 export("RemoveBarcodeDup");
 export("RunBwaMemPair");
